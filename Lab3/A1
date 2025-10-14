@@ -19,6 +19,6 @@ elif (x2<0 and y2<0):
 elif (x2>0 and y2<0):
     quarter2 = 4
 if quarter1 == quarter2:
-    print("YES", quarter1)
+    print("YES", quarter1 , "четверть")
 else:
     print("NO")
