@@ -1,0 +1,14 @@
+previous_readings = int(input("Введите предыдущие показания: "))
+current_readings = int(input("Введите текущие показания: "))
+used_readings = current_readings - previous_readings
+total = 21
+if used_readings > 300 and used_readings <= 600:
+    total += (used_readings - 300) * 0.06
+elif used_readings > 600 and used_readings <= 800:
+    total += 300 * 0.06 + (used_readings - 600) * 0.04
+elif used_readings > 800:
+    total += 300 * 0.06 + 200 * 0.04 + (used_readings - 800) * 0.025
+average = total / used_readings
+print("Объем использованного газа:", used_readings)
+print("Сумма оплаты: ", round(total, 2))
+print("Средняя цена за кубометр: ", round(average, 2))
