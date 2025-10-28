@@ -1,0 +1,6 @@
+n=int(input('Введите ширину: '))
+m=int(input('Введите высоту: '))
+a=0
+while a <= m:
+    print('#'*n)
+    a=a+1
