@@ -1,0 +1,21 @@
+n=int(input('Введите ширину: '))
+m=int(input('Введите высоту: '))
+a=0
+print("Прямоугольник",n,"*",m)
+while a <= m:
+    print('#'*n)
+    a=a+1
+
+b=1
+print("Правый треугольник")
+while b<=n:
+    print('#'*b)
+    b=b+1
+
+c=2
+print("Рамка",n,"*",m)
+print('#'*n)
+while c<m:
+    print('#', ' '*(n-4), '#')
+    c=c+1
+print('#'*n)
