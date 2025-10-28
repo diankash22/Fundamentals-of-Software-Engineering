@@ -1,0 +1,29 @@
+packets = str(input('Введите строку: '))
+if not all(char in '01' for char in packets):
+    print('Введено неверно!')
+a = packets.count('1')
+zeros = packets.count('0')
+b=0
+max=0
+loss=0
+for char in packets:
+    if char == '0':
+        b = b+1
+    elif b>=max:
+        max=b
+        b=0
+loss = (zeros/(zeros + a))*100
+print('Кол-во пакетов: ', a+zeros)
+print('Кол-во потерянных: ', zeros)
+print('Максимальное кол-во потерянных подряд: ', max)
+print(f"Процент потерь:  {loss:.1f} %")
+if loss <= 1:
+    print('Качество связи: Оличное качество')
+elif loss >1 and loss <=5:
+    print('Качество связи: Хорошее качество')
+elif loss >5 and loss <=10:
+    print('Качество связи: Удовлетворительное качество')
+elif loss >10 and loss <=20:
+    print('Качество связи: Плохое качество')
+elif loss >20:
+    print('Качество связи: Критическое состояние сети')
