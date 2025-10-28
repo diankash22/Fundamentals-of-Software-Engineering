@@ -1,1 +1,48 @@
+import random
+import time
 
+print("Тренажёр таблицы умножения")
+
+n = int(input("Введите количество примеров: "))
+
+correct = 0
+total_time = 0
+
+for i in range(n):
+    a = random.randint(2, 9)
+    b = random.randint(2, 9)
+    result = a * b
+
+    print(f"\nВопрос {i + 1}/{n}")
+
+    while True:
+        start = time.time()
+        answer = input(f"{a} × {b} = ")
+
+        try:
+            user_answer = int(answer)
+            end = time.time()
+            time_spent = end - start
+
+            if user_answer == result:
+                print(f"Верно! (Время: {time_spent:.1f} сек)")
+                correct += 1
+            else:
+                print(f"Неверно! Правильно: {result} (Время: {time_spent:.1f} сек)")
+
+            total_time += time_spent
+            break
+
+        except:
+            end = time.time()
+            time_spent = end - start
+            total_time += time_spent
+            print("Пожалуйста, введите целое число!")
+
+print("\n" + "=" * 30)
+print("СТАТИСТИКА:")
+print("\n" + "=" * 30)
+print(f"Общее время: {total_time:.1f} секунд")
+print(f"Среднее время на вопрос: {total_time / n:.1f} сек")
+print(f"Правильных ответов: {correct}/{n}")
+print(f"Процент правильных: {(correct / n) * 100:.1f}%")
