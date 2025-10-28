@@ -1,0 +1,8 @@
+n=int(input('Введите ширину: '))
+m=int(input('Введите длину: '))
+a=2
+print('#'*n)
+while a<m:
+    print('#', ' '*(n-4), '#')
+    a=a+1
+print('#'*n)
