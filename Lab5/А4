@@ -41,3 +41,8 @@ def decode(werb):
             word += werb[i]
             i += 1
     return word
+
+def search_data(protein):
+    protein = decode(protein) #преобразование
+    proteins = read_command(file_proteins)
+    search = ""
