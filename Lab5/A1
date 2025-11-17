@@ -1,0 +1,5 @@
+text= "Падал (куда он там падал)"
+position = text.rfind('(')
+left = 5
+right = 10
+text = text.replace(text[left:right + 1], '')
