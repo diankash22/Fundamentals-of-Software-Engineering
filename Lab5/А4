@@ -5,3 +5,12 @@ file_proteins = 'sequences.1.txt
 def read_command(filename):
     proteins = []
     file = open(filename, 'r', encoding='utf-8')
+    for line in file:
+        parts = line.strip().split('\t') #разделяем строку по табуляции и после сохраняем как кортеж
+        protein_data = (
+            parts[0].strip(), #name
+            parts[1].strip(), #organism
+            parts[2].strip()  #sequence
+        )
+        proteins.append(protein_data)
+    return proteins
