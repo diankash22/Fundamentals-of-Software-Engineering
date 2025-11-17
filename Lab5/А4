@@ -100,3 +100,9 @@ def diff(protein1, protein2):
 
     if f_protein2 == '':
         return 'MISSING'
+    if len(f_protein1) > len(f_protein2): #сравнение длин 2 последовательностей
+        max_protein = f_protein1
+        min_protein = f_protein2
+    else:
+        max_protein = f_protein2
+        min_protein = f_protein1
