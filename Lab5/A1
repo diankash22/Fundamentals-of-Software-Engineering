@@ -1,5 +1,6 @@
-text= "Падал (куда он там падал)"
-position = text.rfind('(')
-left = 5
-right = 10
-text = text.replace(text[left:right + 1], '')
+def short_text(st):
+    while '(' in st or ')' in st:
+        left = st.rfind('(')
+        right = st.find(')',left)      
+      
+
