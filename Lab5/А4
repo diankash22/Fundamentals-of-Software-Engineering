@@ -64,3 +64,10 @@ def mode(protein):
 
     proteins = read_command(file_proteins)
     mode_app = "" #последовательность найденного белка
+    for item in proteins:
+        if item[0] == protein:
+            mode_app = item[2]#если имя совпало сохраняем последовательность найденного с начальным
+            break
+
+    if mode_app == "":
+        return "NOT FOUND"
