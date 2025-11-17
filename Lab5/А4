@@ -106,3 +106,10 @@ def diff(protein1, protein2):
     else:
         max_protein = f_protein2
         min_protein = f_protein1
+
+    answer_diff = (len(max_protein) - len(min_protein))
+    for i in range(len(min_protein)):
+        if min_protein[i] != max_protein[i]:
+            answer_diff = answer_diff + 1 #увеличиваем количество отличий
+
+    return answer_diff
