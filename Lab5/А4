@@ -1,0 +1,7 @@
+import string
+import re
+file_commands = 'commands.1.txt'
+file_proteins = 'sequences.1.txt
+def read_command(filename):
+    proteins = []
+    file = open(filename, 'r', encoding='utf-8')
