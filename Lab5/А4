@@ -57,3 +57,10 @@ def search_data(protein):
         return "NOT FOUND"
     else:
         return search
+
+def mode(protein):
+    if protein == "": #проверка ввели ли название белка
+        return "MISSING"
+
+    proteins = read_command(file_proteins)
+    mode_app = "" #последовательность найденного белка
