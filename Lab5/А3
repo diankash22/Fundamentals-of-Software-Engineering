@@ -1,0 +1,4 @@
+text=input("Введите текст")
+def abbreviation(text):
+     words=text.split()
+     abbreviation=' '
