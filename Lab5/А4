@@ -53,3 +53,7 @@ def search_data(protein):
         if sequence.find(protein) != -1: #если последовательность найдена формируем результат
             search = command + " " + sequence
             break
+    if search == "":
+        return "NOT FOUND"
+    else:
+        return search
