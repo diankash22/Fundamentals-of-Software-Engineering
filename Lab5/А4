@@ -81,3 +81,22 @@ def mode(protein):
     for ch in sorted(letters):#проходим по ключам в алфавитном порядке
         if letters[ch] == max_ver:
             return ch, max_ver
+
+def diff(protein1, protein2):
+    proteins = read_command(file_proteins)
+    f_protein1 = ''
+    f_protein2 = ''
+
+    for i in range(len(proteins)):
+        if (proteins[i])[0] == protein1: #сравнение имени первого элемента кортежа 
+            f_protein1 = (proteins[i])[2] #берем последовательность белка
+
+    if f_protein1 == '':
+        return 'MISSING'
+
+    for i in range(len(proteins)):
+        if (proteins[i])[0] == protein2:
+            f_protein2 = (proteins[i])[2]
+
+    if f_protein2 == '':
+        return 'MISSING'
