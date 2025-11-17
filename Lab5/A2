@@ -1,3 +1,6 @@
 import re
 text = input()
 sentences = re.split(r'(?<=[.?!])', text)
+clean_sentences = []
+for s in sentences:
+    cleaned = s.strip()
