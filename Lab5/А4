@@ -71,3 +71,13 @@ def mode(protein):
 
     if mode_app == "":
         return "NOT FOUND"
+    letters = dict() #создаем словарь
+    for ch in mode_app:
+        letters[ch] = letters.get(ch, 0) + 1 #увеличение счетчика для каждой буквы,get ищет
+        # если находит то присваивает индекс к ch,если нет то 0.+1 добавляет еще одно появление
+
+    max_ver = max(letters.values()) #нахождение самого большого количества повторений
+
+    for ch in sorted(letters):#проходим по ключам в алфавитном порядке
+        if letters[ch] == max_ver:
+            return ch, max_ver
