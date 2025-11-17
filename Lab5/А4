@@ -46,3 +46,10 @@ def search_data(protein):
     protein = decode(protein) #преобразование
     proteins = read_command(file_proteins)
     search = ""
+    for item in proteins:
+        sequence = item[2] #последовательность белка
+        command = item[1] #команда для белка
+
+        if sequence.find(protein) != -1: #если последовательность найдена формируем результат
+            search = command + " " + sequence
+            break
