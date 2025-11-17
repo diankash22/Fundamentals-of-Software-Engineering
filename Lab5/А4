@@ -27,3 +27,13 @@ def read_commands_data(filename):
         )
         commands.append(commands_data)
     return commands
+
+def decode(werb):
+    word = ""
+    i = 0
+    while i < len(werb):   
+        if werb[i].isdigit(): #проверяем каждый элемени на то является ли цифрой
+            count = int(werb[i]) #запоминаем какое число стоит на позиции i
+            letter = werb[i+1]  #запоминаем букву которая идет после нашей цифры
+            word += letter * count #преобразование
+            i += 2 #переход к след цифре
