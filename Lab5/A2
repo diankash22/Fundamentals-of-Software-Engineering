@@ -4,3 +4,9 @@ sentences = re.split(r'(?<=[.?!])', text)
 clean_sentences = []
 for s in sentences:
     cleaned = s.strip()
+    if cleaned:
+        clean_sentences.append(cleaned)
+sentences= clean_sentences
+for sentence in clean_sentences:
+    print(sentence)
+print("Предложений в тексте:",len(clean_sentences))
