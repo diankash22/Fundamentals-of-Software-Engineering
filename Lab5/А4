@@ -1,165 +1,174 @@
-import string
-import re
 file_commands = 'commands.1.txt'
 file_proteins = 'sequences.1.txt'
 file_output = 'genedata.1.txt'
 
+
+# Читаем sequences файл.Каждая строка (name, organism, sequence).
 def read_command(filename):
     proteins = []
-    file = open(filename, 'r', encoding='utf-8')
+    file = open(filename, "r",encoding="utf-8")
     for line in file:
-        parts = line.strip().split('\t') #разделяем строку по табуляции и после сохраняем как кортеж
-        protein_data = (
-            parts[0].strip(), #name
-            parts[1].strip(), #organism
-            parts[2].strip()  #sequence
-        )
-        proteins.append(protein_data)
+            parts = line.strip().split('\t') # делит по табуляции
+            proteins.append((parts[0].strip(), parts[1].strip(), parts[2].strip())) #сохраняем как кортеж
     return proteins
 
+
+# Читаем commands файл. Возвращаем список (op, params_list).
+# parts[1:] даёт список параметров (может быть 1 или 2 элементов).
 def read_commands_data(filename):
-    commands=[]
-    file = open(filename, 'r',encoding='utf-8')
+    commands = []
+    file = open(filename, 'r', encoding='utf-8')
     for line in file:
-        parts=line.strip().split('\t')
-        commands_data= (
-            parts[0].strip(),
-            parts[1].strip(),
+        parts = line.strip().split('\t')
+        commands_data = (
+            parts[0],   # тип операции
+            parts[1:]   # параметры (в виде списка!)
         )
         commands.append(commands_data)
     return commands
 
+
+#декодирование: "FK3I" -> "FKIII"
 def decode(werb):
     word = ""
     i = 0
     while i < len(werb):
-        if werb[i].isdigit(): #проверяем каждый элемени на то является ли цифрой
-            if i + 1 >= len(werb): #защита от выхода за границу
+        ch = werb[i]
+        if ch.isdigit():#если встретили цифру
+            #если цифра в конце — прекращаем
+            if i + 1 >= len(werb):
                 break
-            count = int(werb[i]) #запоминаем какое число стоит на позиции i
-            letter = werb[i+1]  #запоминаем букву которая идет после нашей цифры
-            word += letter * count #преобразование
-            i += 2 #переход к след цифре
+            count = int(ch)#сколько раз повторяется
+            letter = werb[i + 1] #какая буква повторяется
+            word += letter * count
+            i += 2 #переходим к след цифре
         else:
-            word += werb[i]
+            word += ch
             i += 1
     return word
 
-def search_data(protein):
-    protein = decode(protein) #преобразование
+
+#ищем pattern (после декода) в каждой последовательности.
+# Возвращаем список строк organism name для всех совпадений или NOT FOUND.
+def search_data(pattern):
+    pattern = decode(pattern)
     proteins = read_command(file_proteins)
     results = []
-    for item in proteins:
-        name = item[0]
-        sequence = item[2] #последовательность белка
-        organism = item[1] 
+    for name, organism, sequence in proteins:
+        if pattern in sequence: #поиск подстроки
+            # по условию нужно выводить название организма и название белка
+            results.append(f"{organism}\t{name}")
+    if not results:
+        return ["NOT FOUND"]
+    return results
 
-        if sequence.find(protein) != -1: #если последовательность найдена формируем результат
-            results.append( organism + " " + name)
-            break
-    if len(results) == 0:
-        return "NOT FOUND"
-    else:
-        return results
 
+# MODE: возвращает letter, count или MISSING / NOT FOUND
 def mode(protein):
     if protein == "":
         return "MISSING"
-
     proteins = read_command(file_proteins)
-    sequence = ''
-
-    for item in proteins:
-        if item[0] == protein:
-            sequence = item[2]
+    sequence = None
+    for name, organism, seq in proteins:
+        if name == protein:
+            sequence = seq
             break
-
-    if sequence = '':
+    if sequence is None:
         return "NOT FOUND"
-
-    # Подсчет частоты аминокислот
-    freq = {}
+    freq = {} #кортеж
     for ch in sequence:
-        freq[ch] = freq.get(ch, 0) + 1 #увеличение счетчика для каждой буквы,get ищет
+        freq[ch] = freq.get(ch, 0) + 1# увеличение счетчика для каждой буквы,get ищет
         # если находит то присваивает индекс к ch,если нет то 0.+1 добавляет еще одно появление
-
-    max_count = max(freq.values())
-
-    # берём первую по алфавиту среди равных
+    max_count = max(freq.values()) #максимальная частота
+    # выбрать алфавитно первую среди равных
     for ch in sorted(freq):
         if freq[ch] == max_count:
             return ch, max_count
+    return "NOT FOUND"
 
+
+# DIFF: возвращает число различий или строку
 def diff(protein1, protein2):
     proteins = read_command(file_proteins)
-    
-    f_protein1 = ''
-    f_protein2 = ''
-
-    for item in proteins:
-        if item[0] == protein1:
-            f_protein1 = item[2]
-        if item[0] == protein2:
-            f_protein2 = item[2]
-
-    # Обработка отсутствующих белков
+    seq1 = None
+    seq2 = None
+    # ищем обе последовательности
+    for name, organism, seq in proteins:
+        if name == protein1: #если нашли первый белок
+            seq1 = seq
+        if name == protein2: #если нашли второй белок
+            seq2 = seq
+    # проверка отсутствующих белков
     missing = []
-    if f_protein1 = '':
+    if seq1 is None:
         missing.append(protein1)
-    if f_protein2 = '':
+    if seq2 is None:
         missing.append(protein2)
-
     if missing:
         return "MISSING: " + " ".join(missing)
-
-    # Расчет различий
-    if len(f_protein1) > len(f_protein2):
-        max_p, min_p = f_protein1, f_protein2
+    # считаем различия: разница длин + посимвольные различия по длине короткой
+    if len(seq1) >= len(seq2): #опрееделим какая последовательность длиннее
+        max_s, min_s = seq1, seq2
     else:
-        max_p, min_p = f_protein2, f_protein1
-
-    diff_count = len(max_p) - len(min_p)
-
-    for i in range(len(min_p)):
-        if max_p[i] != min_p[i]:
-            diff_count += 1
-
-    return diff_count
+        max_s, min_s = seq2, seq1
+    diff_count = len(max_s) - len(min_s) #разница длин добавляется в разницу отличий
+    for i in range(len(min_s)):
+        if max_s[i] != min_s[i]:
+            diff_count += 1 #увеличиваем счетчик различий
+    return str(diff_count)
 
 
+# Основной процесс: выполняем команды и записываем в файл
 def process_all():
     commands = read_commands_data(file_commands)
 
-    with open(file_output, 'w', encoding='utf-8') as out:
+    out=open(file_output, "w", encoding="utf-8")
 
-        # первые две строки — по условию
-        out.write("ТВОЁ ИМЯ\n")
-        out.write("Генетический поиск\n")
+    out.write("Dwight Barnette\n") #вывести заголовок отчета
+    out.write("Genetic Searching\n")
+    out.write("--------------------------------------------------------------------------\n")
 
-        operation_number = 1
+    op_number = 1#счетчик операций
 
-        for op, params in commands:
-            out.write("\n" + f"{operation_number:03d}" + "\n")
-            operation_number += 1
+    for op, params in commands:
+        out.write(f"{op_number:03d}   ") #пишем операции в формате 001
+        op_number += 1
 
-            if op == "search":
-                out.write("search " + params[0] + "\n")
-                results = search_data(params[0])
-                for r in results:
-                    out.write(r + "\n")
+        # ===== MODE =====
+        if op == "mode":
+            protein = params[0] #берем имя белка
+            out.write(f"mode   {protein}\n") #имя белка
+            out.write("amino-acid occurs:\n")
+            result = mode(protein) #вызываем функцию
+            if isinstance(result, tuple): #является ли резалт кортежем
+                ch, count = result #распаковываем кортеж на две переменные
+                out.write(f"{ch:<10}{count}\n") #записываем  в видевыравнивание по левому краю 10-ширинра поля,счисло повторений
+            else:
+                out.write(str(result) + "\n") #если результат не кортеж
 
-            elif op == "diff":
-                protein1 = params[0]
-                protein2 = params[1]
-                out.write(f"diff {protein1} {protein2}\n")
-                result = diff(protein1, protein2)
-                out.write(result + "\n")
+            # ===== SEARCH =====
+        elif op == "search":
+            pattern = params[0]  #берем операцию
+            out.write(f"search   {pattern}\n") #записываем команду и паттерн которыфй ищем
+            out.write("organism                 protein\n")
 
-            elif op == "mode":
-                protein = params[0]
-                out.write("mode " + protein + "\n")
-                result = mode(protein)
-                out.write(str(result) + "\n")
+            results = search_data(pattern) #вызов функции
+            if results == ["NOT FOUND"]:
+                out.write("NOT FOUND\n")
+            else:
+                for line in results:
+                    organism, protein = line.split ("\t") #разделяем строку на 2 части
+                    out.write(f"{organism:<25}{protein}\n") #левое выравнивание,ширина поля 25 символов
 
-            # линия разделения
-            out.write("------------------------------\n")
+            # ===== DIFF =====
+        elif op == "diff":
+            p1 = params[0] #присваивается чтобы искать отличия
+            p2 = params[1]
+            out.write(f"diff   {p1}   {p2}\n") #записываем саму функцию и подставляем переменные
+            out.write("amino-acids difference:\n")
+
+            result = diff(p1, p2)
+            out.write(str(result) + "\n")
+
+        out.write("--------------------------------------------------------------------------\n")
+process_all()
