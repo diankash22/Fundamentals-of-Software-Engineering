@@ -107,3 +107,12 @@ def analyze_workout_types(workouts):
         print(f"{workout_type.capitalize()}: {type_count} тренировок ({percentage}%)") #Тип тренировки с большой буквы + сколько раз встречается + процент
         print(f"Средняя длительность: {int(avg_duration)} мин")
         print(f"Средние калории: {avg_calories} ккал")
+
+def analyze_user(users, workouts, user_name):
+    user = next((user for user in users if user["name"] == user_name), None)
+
+    if user is None:
+        print(f"Пользователь с именем '{user_name}' не найден.")
+        return
+
+    user_workouts = [w for w in workouts if w["user_id"] == user["user_id"]] #перебираем workouts, добавляем w в результат, только если w["user_id"] совпадает с user["user_id"]
