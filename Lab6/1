@@ -87,3 +87,23 @@ def print_general_stats(users, workouts):
         print(f"Время: {round(stats['total_time_hours'], 1)} часов")
         print()
 
+def analyze_workout_types(workouts):
+    workout_types_data = defaultdict(list)
+
+    for workout in workouts:
+        workout_types_data[workout["type"]].append(workout) #Берётся тип тренировки и: если такого типа ещё нет — создаётся пустой список текущая тренировка добавляется в список этого типа
+
+    total_workouts = len(workouts)
+
+    print("РАСПРЕДЕЛЕНИЕ ПО ТИПАМ ТРЕНИРОВОК:")
+
+    for workout_type in sorted(workout_types_data.keys()): #сортировка по алфавиту
+        type_workouts = workout_types_data[workout_type]
+        type_count = len(type_workouts)
+        percentage = round(type_count / total_workouts * 100, 1)
+        avg_duration = sum(w["duration"] for w in type_workouts) / type_count #Средняя длительность: Складываются все минуты,Делится на количество тренировок
+        avg_calories = sum(w["calories"] for w in type_workouts) // type_count
+
+        print(f"{workout_type.capitalize()}: {type_count} тренировок ({percentage}%)") #Тип тренировки с большой буквы + сколько раз встречается + процент
+        print(f"Средняя длительность: {int(avg_duration)} мин")
+        print(f"Средние калории: {avg_calories} ккал")
