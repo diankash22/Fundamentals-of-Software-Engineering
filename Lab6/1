@@ -139,3 +139,20 @@ def analyze_user(users, workouts, user_name):
     print(f"Пройдено дистанции: {round(total_distance, 1)} км")
     print(f"Средние калории за тренировку: {avg_calories_per_workout}")
     print(f"Любимый тип тренировки: {favorite_workout_type}")
+
+    def plot_workout_types_pie(workouts):
+    workout_counts = {} #словарь
+
+    for workout in workouts:
+        workout_type = workout["type"]
+        workout_counts[workout_type] = workout_counts.get(workout_type, 0) + 1 #берёт текущее количество этого типа, если типа ещё нет в словаре — возвращает 0. + 1 — увеличивает счётчик. результат записывается обратно по ключу workout_type
+
+    labels = list(workout_counts.keys()) #Создаётся список подписей диаграммы — названия типов тренировок.
+    sizes = list(workout_counts.values()) #Создаётся список чисел — сколько тренировок каждого типа.
+
+    plt.figure(figsize=(8, 8)) #Создаётся новая фигура (окно) диаграммы размером 8×8 дюймов.
+    plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90) #autopct='%1.1f%%' — отображение процентов (1 знак после запятой), startangle=90 — поворот начала диаграммы на 90°
+    plt.title("Распределение типов тренировок")
+    plt.axis('equal') #Делает круг ровным, а не овальным.
+    plt.show()
+
