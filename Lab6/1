@@ -208,3 +208,28 @@ def plot_workout_efficiency_bar(workouts):
 
     plt.tight_layout()
     plt.show()
+
+def plot_user_calories_comparison(users, workouts):
+    user_calories = {}
+
+    for user in users:
+        user_workouts = [w for w in workouts if w["user_id"] == user["user_id"]]
+        total_calories = sum(w["calories"] for w in user_workouts)
+        user_calories[user["name"]] = total_calories
+
+    sorted_users = sorted(user_calories.items(), key=lambda x: x[1], reverse=True) #Сортируем пользователей по калориям по убыванию
+    user_names = [user[0] for user in sorted_users] #Создаётся список имён пользователей в отсортированном порядке.
+    calories_values = [user[1] for user in sorted_users] #Создаётся список калорий в том же порядке.
+
+    plt.figure(figsize=(12, 6))
+    plt.bar(user_names, calories_values, color='orange')
+    plt.title("Сравнение пользователей по общим затраченным калориям")
+    plt.ylabel("Общие калории")
+    plt.xlabel("Пользователи")
+    plt.xticks(rotation=45)
+
+    for i, v in enumerate(calories_values):
+        plt.text(i, v + 50, str(v), ha='center')
+
+    plt.tight_layout()
+    plt.show()
