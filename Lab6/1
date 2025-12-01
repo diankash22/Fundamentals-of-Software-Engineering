@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 import matplotlib.pyplot as plt
 from collections import Counter, defaultdict
 
+
 def load_users_data(file_path="users.xml"):
     tree = ET.parse(file_path)
     root = tree.getroot()
@@ -9,7 +10,7 @@ def load_users_data(file_path="users.xml"):
     users = []
     for user_elem in root.findall("user"):
         user = {
-            "user_id": int(user_elem.find("user_id").text), #словарь с значением
+            "user_id": int(user_elem.find("user_id").text),
             "name": user_elem.find("name").text,
             "age": int(user_elem.find("age").text),
             "weight": int(user_elem.find("weight").text),
@@ -19,7 +20,7 @@ def load_users_data(file_path="users.xml"):
 
     return users
 
-    
+
 def load_workouts_data(file_path="workouts.xml"):
     tree = ET.parse(file_path)
     root = tree.getroot()
@@ -41,10 +42,11 @@ def load_workouts_data(file_path="workouts.xml"):
 
     return workouts
 
+
 def print_general_stats(users, workouts):
     total_workouts = len(workouts)
     total_users = len(users)
-    total_calories = sum(w["calories"] for w in workouts) #присваиваем w значение из списка и пропускаем через цикл
+    total_calories = sum(w["calories"] for w in workouts)
     total_duration_hours = sum(w["duration"] for w in workouts) / 60.0
     total_distance = sum(w["distance"] for w in workouts)
 
@@ -57,17 +59,18 @@ def print_general_stats(users, workouts):
     print(f"Пройдено дистанции: {round(total_distance, 1)} км")
     print()
 
-    def analyze_user_activity(users, workouts):
+
+def analyze_user_activity(users, workouts):
     user_stats = []
 
     for user in users:
-        user_workouts = [w for w in workouts if w["user_id"] == user["user_id"]] #Берем каждую тренировку w из списка workouts и добавляем её в новый список,если user_id тренировки равен user_id пользователя.
+        user_workouts = [w for w in workouts if w["user_id"] == user["user_id"]]
         total_workouts = len(user_workouts)
         total_calories = sum(w["calories"] for w in user_workouts)
         total_time_hours = sum(w["duration"] for w in user_workouts) / 60.0
 
-        if total_workouts > 0: #Проверяется, есть ли у пользователя хотя бы одна тренировка
-            user_stats.append({ #формируем словарь
+        if total_workouts > 0:
+            user_stats.append({
                 "name": user["name"],
                 "fitness_level": user["fitness_level"],
                 "total_workouts": total_workouts,
@@ -75,38 +78,40 @@ def print_general_stats(users, workouts):
                 "total_time_hours": total_time_hours
             })
 
-    user_stats.sort(key=lambda x: x["total_workouts"], reverse=True) #Сортировка списка пользователей по убыванию количества тренировок.
+    user_stats.sort(key=lambda x: x["total_workouts"], reverse=True)
 
     print("ТОП-3 АКТИВНЫХ ПОЛЬЗОВАТЕЛЕЙ:")
     print()
 
-    for i, stats in enumerate(user_stats[:3], 1): #Берутся первые 3 пользователя из списка — самые активные.
+    for i, stats in enumerate(user_stats[:3], 1):
         print(f"{i}. {stats['name']} ({stats['fitness_level']}):")
         print(f"Тренировок: {stats['total_workouts']}")
         print(f"Калорий: {stats['total_calories']}")
         print(f"Время: {round(stats['total_time_hours'], 1)} часов")
         print()
 
+
 def analyze_workout_types(workouts):
     workout_types_data = defaultdict(list)
 
     for workout in workouts:
-        workout_types_data[workout["type"]].append(workout) #Берётся тип тренировки и: если такого типа ещё нет — создаётся пустой список текущая тренировка добавляется в список этого типа
+        workout_types_data[workout["type"]].append(workout)
 
     total_workouts = len(workouts)
 
     print("РАСПРЕДЕЛЕНИЕ ПО ТИПАМ ТРЕНИРОВОК:")
 
-    for workout_type in sorted(workout_types_data.keys()): #сортировка по алфавиту
+    for workout_type in sorted(workout_types_data.keys()):
         type_workouts = workout_types_data[workout_type]
         type_count = len(type_workouts)
         percentage = round(type_count / total_workouts * 100, 1)
-        avg_duration = sum(w["duration"] for w in type_workouts) / type_count #Средняя длительность: Складываются все минуты,Делится на количество тренировок
+        avg_duration = sum(w["duration"] for w in type_workouts) / type_count
         avg_calories = sum(w["calories"] for w in type_workouts) // type_count
 
-        print(f"{workout_type.capitalize()}: {type_count} тренировок ({percentage}%)") #Тип тренировки с большой буквы + сколько раз встречается + процент
+        print(f"{workout_type.capitalize()}: {type_count} тренировок ({percentage}%)")
         print(f"Средняя длительность: {int(avg_duration)} мин")
         print(f"Средние калории: {avg_calories} ккал")
+
 
 def analyze_user(users, workouts, user_name):
     user = next((user for user in users if user["name"] == user_name), None)
@@ -115,8 +120,9 @@ def analyze_user(users, workouts, user_name):
         print(f"Пользователь с именем '{user_name}' не найден.")
         return
 
-    user_workouts = [w for w in workouts if w["user_id"] == user["user_id"]] #перебираем workouts, добавляем w в результат, только если w["user_id"] совпадает с user["user_id"]
-        if not user_workouts:
+    user_workouts = [w for w in workouts if w["user_id"] == user["user_id"]]
+
+    if not user_workouts:
         print(f"У пользователя '{user_name}' нет тренировок.")
         return
 
@@ -127,9 +133,9 @@ def analyze_user(users, workouts, user_name):
     avg_calories_per_workout = total_calories // total_workouts
 
     workout_type_counter = Counter(w["type"] for w in user_workouts)
-    favorite_workout_type = workout_type_counter.most_common(1)[0][0] #most_common(1)  список из 1 самого частого элемента, [0]  берём первый кортеж,[0]берём первый элемент из кортежа
+    favorite_workout_type = workout_type_counter.most_common(1)[0][0]
 
-        print(f"ДЕТАЛЬНЫЙ АНАЛИЗ ДЛЯ ПОЛЬЗОВАТЕЛЯ: {user_name}")
+    print(f"ДЕТАЛЬНЫЙ АНАЛИЗ ДЛЯ ПОЛЬЗОВАТЕЛЯ: {user_name}")
     print("=" * 76)
     print(f"Возраст: {user['age']} лет, Вес: {user['weight']} кг")
     print(f"Уровень: {user['fitness_level']}")
@@ -140,30 +146,32 @@ def analyze_user(users, workouts, user_name):
     print(f"Средние калории за тренировку: {avg_calories_per_workout}")
     print(f"Любимый тип тренировки: {favorite_workout_type}")
 
-    def plot_workout_types_pie(workouts):
-    workout_counts = {} #словарь
+
+def plot_workout_types_pie(workouts):
+    workout_counts = {}
 
     for workout in workouts:
         workout_type = workout["type"]
-        workout_counts[workout_type] = workout_counts.get(workout_type, 0) + 1 #берёт текущее количество этого типа, если типа ещё нет в словаре — возвращает 0. + 1 — увеличивает счётчик. результат записывается обратно по ключу workout_type
+        workout_counts[workout_type] = workout_counts.get(workout_type, 0) + 1
 
-    labels = list(workout_counts.keys()) #Создаётся список подписей диаграммы — названия типов тренировок.
-    sizes = list(workout_counts.values()) #Создаётся список чисел — сколько тренировок каждого типа.
+    labels = list(workout_counts.keys())
+    sizes = list(workout_counts.values())
 
-    plt.figure(figsize=(8, 8)) #Создаётся новая фигура (окно) диаграммы размером 8×8 дюймов.
-    plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90) #autopct='%1.1f%%' — отображение процентов (1 знак после запятой), startangle=90 — поворот начала диаграммы на 90°
+    plt.figure(figsize=(8, 8))
+    plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
     plt.title("Распределение типов тренировок")
-    plt.axis('equal') #Делает круг ровным, а не овальным.
+    plt.axis('equal')
     plt.show()
+
 
 def plot_user_activity_bar(users, workouts):
     user_names = []
     workout_counts = []
 
     for user in users:
-        user_workouts = [w for w in workouts if w["user_id"] == user["user_id"]] #Из всех тренировок выбираем только те, которые принадлежат текущему пользователю.
+        user_workouts = [w for w in workouts if w["user_id"] == user["user_id"]]
         count = len(user_workouts)
-        user_names.append(user["name"]) #Добавляем имя пользователя в список user_names.
+        user_names.append(user["name"])
         workout_counts.append(count)
 
     plt.figure(figsize=(12, 6))
@@ -171,13 +179,14 @@ def plot_user_activity_bar(users, workouts):
     plt.title("Активность пользователей (количество тренировок)")
     plt.ylabel("Количество тренировок")
     plt.xlabel("Пользователи")
-    plt.xticks(rotation=45)#Поворачивает имена пользователей на 45°, чтобы не наезжали друг на друга.
+    plt.xticks(rotation=45)
 
-    for i, v in enumerate(workout_counts): #Перебираем все значения количества тренировок.
-        plt.text(i, v + 0.1, str(v), ha='center') #Над каждым столбцом рисуется число:
+    for i, v in enumerate(workout_counts):
+        plt.text(i, v + 0.1, str(v), ha='center')
 
-    plt.tight_layout() #Автоматически подгоняет отступы, чтобы всё красиво помещалось.
+    plt.tight_layout()
     plt.show()
+
 
 def plot_workout_efficiency_bar(workouts):
     total_calories_by_type = {}
@@ -186,17 +195,19 @@ def plot_workout_efficiency_bar(workouts):
 
     for workout in workouts:
         workout_type = workout["type"]
-        total_calories_by_type[workout_type] = total_calories_by_type.get(workout_type, 0) + workout["calories"] #Добавляем калории в нужный тип: если типа ещё нет — начальное значение 0, затем прибавляем калории.
+        total_calories_by_type[workout_type] = total_calories_by_type.get(workout_type, 0) + workout["calories"]
         total_duration_by_type[workout_type] = total_duration_by_type.get(workout_type, 0) + workout["duration"]
-        count_by_type[workout_type] = count_by_type.get(workout_type, 0) + 1 #Счётчик количества тренировок каждого типа
+        count_by_type[workout_type] = count_by_type.get(workout_type, 0) + 1
+
     workout_types = []
     efficiencies = []
 
-    for workout_type in total_calories_by_type.keys(): #по каждому типу тренировки.
-        efficiency = total_calories_by_type[workout_type] / total_duration_by_type[workout_type] #Формула эффективности:калории / минуты
-        efficiency = round(efficiency, 2) #до двух знаков после запятой.
+    for workout_type in total_calories_by_type.keys():
+        efficiency = total_calories_by_type[workout_type] / total_duration_by_type[workout_type]
+        efficiency = round(efficiency, 2)
         workout_types.append(workout_type)
         efficiencies.append(efficiency)
+
     plt.figure(figsize=(10, 6))
     plt.bar(workout_types, efficiencies, color='lightgreen')
     plt.title("Эффективность тренировок (калории/минуту)")
@@ -204,10 +215,11 @@ def plot_workout_efficiency_bar(workouts):
     plt.xlabel("Тип тренировки")
 
     for i, v in enumerate(efficiencies):
-        plt.text(i, v + 0.05, str(v), ha='center') #Пишем число над столбцами.
+        plt.text(i, v + 0.05, str(v), ha='center')
 
     plt.tight_layout()
     plt.show()
+
 
 def plot_user_calories_comparison(users, workouts):
     user_calories = {}
@@ -217,9 +229,9 @@ def plot_user_calories_comparison(users, workouts):
         total_calories = sum(w["calories"] for w in user_workouts)
         user_calories[user["name"]] = total_calories
 
-    sorted_users = sorted(user_calories.items(), key=lambda x: x[1], reverse=True) #Сортируем пользователей по калориям по убыванию
-    user_names = [user[0] for user in sorted_users] #Создаётся список имён пользователей в отсортированном порядке.
-    calories_values = [user[1] for user in sorted_users] #Создаётся список калорий в том же порядке.
+    sorted_users = sorted(user_calories.items(), key=lambda x: x[1], reverse=True)
+    user_names = [user[0] for user in sorted_users]
+    calories_values = [user[1] for user in sorted_users]
 
     plt.figure(figsize=(12, 6))
     plt.bar(user_names, calories_values, color='orange')
@@ -233,6 +245,7 @@ def plot_user_calories_comparison(users, workouts):
 
     plt.tight_layout()
     plt.show()
+
 
 def main():
     users = load_users_data()
@@ -272,4 +285,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main()    
