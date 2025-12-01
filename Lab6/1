@@ -9,7 +9,7 @@ def load_users_data(file_path="users.xml"):
     users = []
     for user_elem in root.findall("user"):
         user = {
-            "user_id": int(user_elem.find("user_id").text),
+            "user_id": int(user_elem.find("user_id").text), #словарь с значением
             "name": user_elem.find("name").text,
             "age": int(user_elem.find("age").text),
             "weight": int(user_elem.find("weight").text),
@@ -18,4 +18,26 @@ def load_users_data(file_path="users.xml"):
         users.append(user)
 
     return users
+
+    
+def load_workouts_data(file_path="workouts.xml"):
+    tree = ET.parse(file_path)
+    root = tree.getroot()
+
+    workouts = []
+    for workout_elem in root.findall("workout"):
+        workout = {
+            "workout_id": int(workout_elem.find("workout_id").text),
+            "user_id": int(workout_elem.find("user_id").text),
+            "date": workout_elem.find("date").text,
+            "type": workout_elem.find("type").text,
+            "duration": int(workout_elem.find("duration").text),
+            "distance": float(workout_elem.find("distance").text),
+            "calories": int(workout_elem.find("calories").text),
+            "avg_heart_rate": int(workout_elem.find("avg_heart_rate").text),
+            "intensity": workout_elem.find("intensity").text
+        }
+        workouts.append(workout)
+
+    return workouts
 
