@@ -116,3 +116,15 @@ def analyze_user(users, workouts, user_name):
         return
 
     user_workouts = [w for w in workouts if w["user_id"] == user["user_id"]] #перебираем workouts, добавляем w в результат, только если w["user_id"] совпадает с user["user_id"]
+        if not user_workouts:
+        print(f"У пользователя '{user_name}' нет тренировок.")
+        return
+
+    total_workouts = len(user_workouts)
+    total_calories = sum(w["calories"] for w in user_workouts)
+    total_time_hours = sum(w["duration"] for w in user_workouts) / 60.0
+    total_distance = sum(w["distance"] for w in user_workouts)
+    avg_calories_per_workout = total_calories // total_workouts
+
+    workout_type_counter = Counter(w["type"] for w in user_workouts)
+    favorite_workout_type = workout_type_counter.most_common(1)[0][0]#most_common(1)  список из 1 самого частого элемента, [0]  берём первый кортеж,[0]берём первый элемент из кортежа
