@@ -189,3 +189,11 @@ def plot_workout_efficiency_bar(workouts):
         total_calories_by_type[workout_type] = total_calories_by_type.get(workout_type, 0) + workout["calories"] #Добавляем калории в нужный тип: если типа ещё нет — начальное значение 0, затем прибавляем калории.
         total_duration_by_type[workout_type] = total_duration_by_type.get(workout_type, 0) + workout["duration"]
         count_by_type[workout_type] = count_by_type.get(workout_type, 0) + 1 #Счётчик количества тренировок каждого типа
+    workout_types = []
+    efficiencies = []
+
+    for workout_type in total_calories_by_type.keys(): #по каждому типу тренировки.
+        efficiency = total_calories_by_type[workout_type] / total_duration_by_type[workout_type] #Формула эффективности:калории / минуты
+        efficiency = round(efficiency, 2) #до двух знаков после запятой.
+        workout_types.append(workout_type)
+        efficiencies.append(efficiency)
