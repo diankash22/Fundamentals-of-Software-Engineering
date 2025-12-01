@@ -197,3 +197,14 @@ def plot_workout_efficiency_bar(workouts):
         efficiency = round(efficiency, 2) #до двух знаков после запятой.
         workout_types.append(workout_type)
         efficiencies.append(efficiency)
+    plt.figure(figsize=(10, 6))
+    plt.bar(workout_types, efficiencies, color='lightgreen')
+    plt.title("Эффективность тренировок (калории/минуту)")
+    plt.ylabel("Калории в минуту")
+    plt.xlabel("Тип тренировки")
+
+    for i, v in enumerate(efficiencies):
+        plt.text(i, v + 0.05, str(v), ha='center') #Пишем число над столбцами.
+
+    plt.tight_layout()
+    plt.show()
