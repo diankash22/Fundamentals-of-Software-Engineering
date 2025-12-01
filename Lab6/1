@@ -75,7 +75,7 @@ def print_general_stats(users, workouts):
                 "total_time_hours": total_time_hours
             })
 
-    user_stats.sort(key=lambda x: x["total_workouts"], reverse=True) №Сортировка списка пользователей по убыванию количества тренировок.
+    user_stats.sort(key=lambda x: x["total_workouts"], reverse=True) #Сортировка списка пользователей по убыванию количества тренировок.
 
     print("ТОП-3 АКТИВНЫХ ПОЛЬЗОВАТЕЛЕЙ:")
     print()
@@ -127,7 +127,7 @@ def analyze_user(users, workouts, user_name):
     avg_calories_per_workout = total_calories // total_workouts
 
     workout_type_counter = Counter(w["type"] for w in user_workouts)
-    favorite_workout_type = workout_type_counter.most_common(1)[0][0]#most_common(1)  список из 1 самого частого элемента, [0]  берём первый кортеж,[0]берём первый элемент из кортежа
+    favorite_workout_type = workout_type_counter.most_common(1)[0][0] #most_common(1)  список из 1 самого частого элемента, [0]  берём первый кортеж,[0]берём первый элемент из кортежа
 
         print(f"ДЕТАЛЬНЫЙ АНАЛИЗ ДЛЯ ПОЛЬЗОВАТЕЛЯ: {user_name}")
     print("=" * 76)
