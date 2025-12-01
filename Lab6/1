@@ -178,3 +178,14 @@ def plot_user_activity_bar(users, workouts):
 
     plt.tight_layout() #Автоматически подгоняет отступы, чтобы всё красиво помещалось.
     plt.show()
+
+def plot_workout_efficiency_bar(workouts):
+    total_calories_by_type = {}
+    total_duration_by_type = {}
+    count_by_type = {}
+
+    for workout in workouts:
+        workout_type = workout["type"]
+        total_calories_by_type[workout_type] = total_calories_by_type.get(workout_type, 0) + workout["calories"] #Добавляем калории в нужный тип: если типа ещё нет — начальное значение 0, затем прибавляем калории.
+        total_duration_by_type[workout_type] = total_duration_by_type.get(workout_type, 0) + workout["duration"]
+        count_by_type[workout_type] = count_by_type.get(workout_type, 0) + 1 #Счётчик количества тренировок каждого типа
