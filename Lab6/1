@@ -1,1 +1,21 @@
+import xml.etree.ElementTree as ET
+import matplotlib.pyplot as plt
+from collections import Counter, defaultdict
+
+def load_users_data(file_path="users.xml"):
+    tree = ET.parse(file_path)
+    root = tree.getroot()
+
+    users = []
+    for user_elem in root.findall("user"):
+        user = {
+            "user_id": int(user_elem.find("user_id").text),
+            "name": user_elem.find("name").text,
+            "age": int(user_elem.find("age").text),
+            "weight": int(user_elem.find("weight").text),
+            "fitness_level": user_elem.find("fitness_level").text
+        }
+        users.append(user)
+
+    return users
 
