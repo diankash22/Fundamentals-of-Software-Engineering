@@ -233,3 +233,43 @@ def plot_user_calories_comparison(users, workouts):
 
     plt.tight_layout()
     plt.show()
+
+def main():
+    users = load_users_data()
+    workouts = load_workouts_data()
+
+    print("=" * 60)
+    print("ЗАДАЧА 1: ОБЩАЯ СТАТИСТИКА")
+    print("=" * 60)
+    print_general_stats(users, workouts)
+
+    print("=" * 60)
+    print("ЗАДАЧА 2: АНАЛИЗ ДАННЫХ")
+    print("=" * 60)
+    analyze_user_activity(users, workouts)
+
+    print("-" * 60)
+    analyze_workout_types(workouts)
+
+    print("-" * 60)
+    analyze_user(users, workouts, "Борис")
+
+    print("\n" + "=" * 60)
+    print("ЗАДАЧА 3: ВИЗУАЛИЗАЦИЯ ДАННЫХ")
+    print("=" * 60)
+
+    print("\n1. Круговая диаграмма распределения типов тренировок...")
+    plot_workout_types_pie(workouts)
+
+    print("\n2. Столбчатая диаграмма активности пользователей...")
+    plot_user_activity_bar(users, workouts)
+
+    print("\n3. Столбчатая диаграмма эффективности тренировок...")
+    plot_workout_efficiency_bar(workouts)
+
+    print("\n4. Столбчатая диаграмма сравнения пользователей по калориям...")
+    plot_user_calories_comparison(users, workouts)
+
+
+if __name__ == "__main__":
+    main()
