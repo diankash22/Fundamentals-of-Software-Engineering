@@ -128,3 +128,14 @@ def analyze_user(users, workouts, user_name):
 
     workout_type_counter = Counter(w["type"] for w in user_workouts)
     favorite_workout_type = workout_type_counter.most_common(1)[0][0]#most_common(1)  список из 1 самого частого элемента, [0]  берём первый кортеж,[0]берём первый элемент из кортежа
+
+        print(f"ДЕТАЛЬНЫЙ АНАЛИЗ ДЛЯ ПОЛЬЗОВАТЕЛЯ: {user_name}")
+    print("=" * 76)
+    print(f"Возраст: {user['age']} лет, Вес: {user['weight']} кг")
+    print(f"Уровень: {user['fitness_level']}")
+    print(f"Тренировок: {total_workouts}")
+    print(f"Сожжено калорий: {total_calories}")
+    print(f"Общее время: {round(total_time_hours, 1)} часов")
+    print(f"Пройдено дистанции: {round(total_distance, 1)} км")
+    print(f"Средние калории за тренировку: {avg_calories_per_workout}")
+    print(f"Любимый тип тренировки: {favorite_workout_type}")
