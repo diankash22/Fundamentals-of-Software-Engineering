@@ -41,3 +41,18 @@ def load_workouts_data(file_path="workouts.xml"):
 
     return workouts
 
+def print_general_stats(users, workouts):
+    total_workouts = len(workouts)
+    total_users = len(users)
+    total_calories = sum(w["calories"] for w in workouts) #присваиваем w значение из списка и пропускаем через цикл
+    total_duration_hours = sum(w["duration"] for w in workouts) / 60.0
+    total_distance = sum(w["distance"] for w in workouts)
+
+    print("ОБЩАЯ СТАТИСТИКА")
+    print("=====================")
+    print(f"Всего тренировок: {total_workouts}")
+    print(f"Всего пользователей: {total_users}")
+    print(f"Сожжено калорий: {total_calories}")
+    print(f"Общее время: {round(total_duration_hours, 1)} часов")
+    print(f"Пройдено дистанции: {round(total_distance, 1)} км")
+    print()
