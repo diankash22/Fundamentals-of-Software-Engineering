@@ -156,3 +156,25 @@ def analyze_user(users, workouts, user_name):
     plt.axis('equal') #Делает круг ровным, а не овальным.
     plt.show()
 
+def plot_user_activity_bar(users, workouts):
+    user_names = []
+    workout_counts = []
+
+    for user in users:
+        user_workouts = [w for w in workouts if w["user_id"] == user["user_id"]] #Из всех тренировок выбираем только те, которые принадлежат текущему пользователю.
+        count = len(user_workouts)
+        user_names.append(user["name"]) #Добавляем имя пользователя в список user_names.
+        workout_counts.append(count)
+
+    plt.figure(figsize=(12, 6))
+    plt.bar(user_names, workout_counts, color='skyblue')
+    plt.title("Активность пользователей (количество тренировок)")
+    plt.ylabel("Количество тренировок")
+    plt.xlabel("Пользователи")
+    plt.xticks(rotation=45)#Поворачивает имена пользователей на 45°, чтобы не наезжали друг на друга.
+
+    for i, v in enumerate(workout_counts): #Перебираем все значения количества тренировок.
+        plt.text(i, v + 0.1, str(v), ha='center') #Над каждым столбцом рисуется число:
+
+    plt.tight_layout() #Автоматически подгоняет отступы, чтобы всё красиво помещалось.
+    plt.show()
